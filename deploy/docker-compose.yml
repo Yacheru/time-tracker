@@ -1,0 +1,38 @@
+services:
+#  time-tracker:
+#    user: root
+#    container_name: time-tracker
+#    ports:
+#      - ${API_PORT}:${API_PORT}
+#    build:
+#      context: ../
+#      dockerfile: ./deploy/Dockerfile
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    networks:
+#      - time-tracker
+
+  postgres:
+    user: root
+    container_name: postgres
+    image: postgres:14.12-alpine3.20
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?error}
+      POSTGRES_USER: ${POSTGRES_USER?error}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD?error}
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    volumes:
+      - ./pg-data:/postgresql/data
+    networks:
+      - time-tracker
+
+networks:
+  time-tracker:
+    driver: bridge
