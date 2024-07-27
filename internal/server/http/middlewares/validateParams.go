@@ -9,15 +9,25 @@ import (
 
 func ValidateParams() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		_, err := strconv.Atoi(ctx.Query("passportSeries"))
+		passportSeries, err := strconv.Atoi(ctx.Query("passportSeries"))
 		if err != nil {
 			handlers.NewErrorResponse(ctx, constants.FailedValidateParams)
 			return
 		}
 
-		_, err = strconv.Atoi(ctx.Query("passportNumber"))
+		passportNumber, err := strconv.Atoi(ctx.Query("passportNumber"))
 		if err != nil {
 			handlers.NewErrorResponse(ctx, constants.FailedValidateParams)
+			return
+		}
+
+		if passportSeries <= 999 || passportSeries >= 10000 {
+			handlers.NewErrorResponse(ctx, constants.InvalidSeries)
+			return
+		}
+
+		if passportNumber <= 99999 || passportNumber >= 1000000 {
+			handlers.NewErrorResponse(ctx, constants.InvalidNumber)
 			return
 		}
 

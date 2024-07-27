@@ -15,6 +15,10 @@ func init() {
 	logger.Info("Configuration loaded", logrus.Fields{constants.LoggerCategory: constants.Config})
 }
 
+// @title Time-Tracker
+// @version 1.0.1
+
+// @BasePath /api
 func main() {
 	app, err := server.NewServer()
 	if err != nil {

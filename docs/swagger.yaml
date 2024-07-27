@@ -1,0 +1,304 @@
+basePath: /api
+definitions:
+  entities.People:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      passport_number:
+        type: integer
+      passport_series:
+        type: integer
+      patronymic:
+        type: string
+      surname:
+        type: string
+      task_id:
+        type: integer
+    required:
+    - name
+    - passport_number
+    - passport_series
+    - surname
+    type: object
+  handlers.Response:
+    properties:
+      data: {}
+      description:
+        type: string
+      status:
+        type: integer
+    type: object
+info:
+  contact: {}
+  title: Time-Tracker
+  version: 1.0.1
+paths:
+  /peoples:
+    get:
+      consumes:
+      - application/json
+      description: Get All Peoples
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Get All Peoples
+      tags:
+      - peoples
+  /peoples/create:
+    post:
+      consumes:
+      - application/json
+      description: Create people
+      parameters:
+      - description: Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entities.People'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Create People
+      tags:
+      - peoples
+  /peoples/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Delete People
+      parameters:
+      - description: Passport series
+        in: query
+        name: passportSeries
+        required: true
+        type: integer
+      - description: Passport number
+        in: query
+        name: passportNumber
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Delete People
+      tags:
+      - peoples
+  /peoples/update:
+    patch:
+      consumes:
+      - application/json
+      description: Get All Peoples
+      parameters:
+      - description: Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entities.People'
+      - description: Passport series
+        in: query
+        name: passportSeries
+        required: true
+        type: integer
+      - description: Passport number
+        in: query
+        name: passportNumber
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Get All Peoples
+      tags:
+      - peoples
+  /tasks/:
+    get:
+      consumes:
+      - application/json
+      description: Get All Tasks
+      parameters:
+      - description: Passport series
+        in: query
+        name: passportSeries
+        required: true
+        type: integer
+      - description: Passport number
+        in: query
+        name: passportNumber
+        required: true
+        type: integer
+      - description: Limit
+        in: path
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Get All Tasks
+      tags:
+      - tasks
+  /tasks/start:
+    post:
+      consumes:
+      - application/json
+      description: Start Task
+      parameters:
+      - description: Passport series
+        in: query
+        name: passportSeries
+        required: true
+        type: integer
+      - description: Passport number
+        in: query
+        name: passportNumber
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Start Task
+      tags:
+      - tasks
+  /tasks/stop:
+    post:
+      consumes:
+      - application/json
+      description: Stop Task
+      parameters:
+      - description: Passport series
+        in: query
+        name: passportSeries
+        required: true
+        type: integer
+      - description: Passport number
+        in: query
+        name: passportNumber
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Stop Task
+      tags:
+      - tasks
+swagger: "2.0"

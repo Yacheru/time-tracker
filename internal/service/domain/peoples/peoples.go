@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"strconv"
+	"strings"
 )
 
 type PeopleService struct {
@@ -85,10 +86,49 @@ func (ps *PeopleService) GetAllPeoples(ctx *gin.Context) (*[]entities.People, er
 func (ps *PeopleService) CreatePeople(ctx *gin.Context, people *entities.People) (*entities.People, error) {
 	dbPeople, err := ps.people.CreatePeople(ctx, people)
 	if err != nil {
+		if strings.Contains(err.Error(), "ERROR: duplicate key value violates unique constraint") {
+			return nil, constants.DataTaken
+		}
+
 		logger.DebugF("CreatePeople: %s", logrus.Fields{constants.LoggerCategory: constants.Service}, err.Error())
 
 		return nil, err
 	}
 
 	return dbPeople, nil
+}
+
+func (ps *PeopleService) UpdatePeople(ctx *gin.Context, people *entities.People) (*entities.People, error) {
+	passportSeries, _ := strconv.Atoi(ctx.Query("passportSeries"))
+	passportNumber, _ := strconv.Atoi(ctx.Query("passportNumber"))
+
+	exist, err := ps.people.PeopleExists(ctx, passportSeries, passportNumber)
+	if err != nil {
+		logger.DebugF("PeopleExists: %s", logrus.Fields{constants.LoggerCategory: constants.Service}, err.Error())
+
+		return nil, err
+	}
+	if !exist {
+		return nil, constants.ErrPeopleNotFound
+	}
+
+	dbPeople, err := ps.people.GetPeople(ctx, passportSeries, passportNumber)
+	if err != nil {
+		logger.DebugF("GetPeople: %s", logrus.Fields{constants.LoggerCategory: constants.Service}, err.Error())
+
+		return nil, err
+	}
+
+	updatedPeople, err := ps.people.UpdatePeople(ctx, people, *dbPeople.ID)
+	if err != nil {
+		if strings.Contains(err.Error(), "ERROR: duplicate key value violates unique constraint") {
+			return nil, constants.DataTaken
+		}
+
+		logger.DebugF("UpdatePeople: %s", logrus.Fields{constants.LoggerCategory: constants.Service}, err.Error())
+
+		return nil, err
+	}
+
+	return updatedPeople, nil
 }

@@ -23,9 +23,10 @@ func NewPeopleRepository(db *sqlx.DB) *PeopleRepository {
 
 func (p *PeopleRepository) PeopleExists(ctx *gin.Context, passportSeries, passportNumber int) (bool, error) {
 	var exists bool
+
 	query := `
 		SELECT EXISTS(
-			SELECT 1 FROM peoples WHERE passport_series=$1 AND passport_number=$2
+			SELECT 1 FROM peoples WHERE passport_series=$1 OR passport_number=$2
 		)
 	`
 	err := p.db.GetContext(ctx.Request.Context(), &exists, query, passportSeries, passportNumber)
@@ -85,6 +86,22 @@ func (p *PeopleRepository) CreatePeople(ctx *gin.Context, people *entities.Peopl
 		INSERT INTO peoples (surname, name, patronymic, passport_series, passport_number) VALUES ($1, $2, $3, $4, $5) RETURNING *;
 	`
 	err := p.db.GetContext(ctx.Request.Context(), dbPeople, query, people.Surname, people.Name, people.Patronymic, people.PassportSeries, people.PassportNumber)
+	if err != nil {
+		return nil, err
+	}
+
+	return dbPeople, nil
+}
+
+func (p *PeopleRepository) UpdatePeople(ctx *gin.Context, people *entities.People, id int) (*entities.People, error) {
+	var dbPeople = new(entities.People)
+
+	query := `
+		UPDATE peoples SET surname=$1, name=$2, patronymic=$3, passport_series=$4, passport_number=$5 WHERE id=$6 RETURNING *;
+	`
+	err := p.db.GetContext(ctx.Request.Context(), dbPeople, query,
+		people.Surname, people.Name, people.Patronymic, people.PassportSeries, people.PassportNumber, id,
+	)
 	if err != nil {
 		return nil, err
 	}

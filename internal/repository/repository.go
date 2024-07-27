@@ -10,6 +10,7 @@ import (
 )
 
 type PeopleRepository interface {
+	UpdatePeople(ctx *gin.Context, people *entities.People, id int) (*entities.People, error)
 	DeletePeople(ctx *gin.Context, passportSeries, passportNumber int) (*entities.People, error)
 	PeopleExists(ctx *gin.Context, passportSeries, passportNumber int) (bool, error)
 	GetPeople(ctx *gin.Context, passportSeries, passportNumber int) (*entities.People, error)
@@ -20,7 +21,6 @@ type PeopleRepository interface {
 type TaskRepository interface {
 	DeleteTask(ctx *gin.Context, id int) (*entities.Task, error)
 	ActiveTaskExists(ctx *gin.Context, id int) (bool, error)
-	//GetTask(ctx *gin.Context, p *entities.People) (*entities.Task, error)
 	GetAllTasks(ctx *gin.Context, id, limit int) (*[]entities.Task, error)
 	StartTask(ctx *gin.Context, id int) (*entities.Task, error)
 	StopTask(ctx *gin.Context, id int) (*entities.Task, error)

@@ -12,13 +12,18 @@ import (
 	"io"
 )
 
-func ValidatePassport() gin.HandlerFunc {
+func ValidateBody() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var dbPeople = new(entities.People)
 		var bodyBytes []byte
 
 		if ctx.Request.Body != nil {
 			bodyBytes, _ = io.ReadAll(ctx.Request.Body)
+		}
+
+		if len(bodyBytes) == 0 {
+			handlers.NewErrorResponse(ctx, constants.FailedParseBody)
+			return
 		}
 
 		err := json.Unmarshal(bodyBytes, dbPeople)

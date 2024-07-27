@@ -11,6 +11,7 @@ import (
 
 type PeopleService interface {
 	DeletePeople(ctx *gin.Context) (*entities.People, error)
+	UpdatePeople(ctx *gin.Context, people *entities.People) (*entities.People, error)
 	GetAllPeoples(ctx *gin.Context) (*[]entities.People, error)
 	PeopleExists(ctx *gin.Context, passportSeries int, passportNumber int) (bool, error)
 	GetPeople(ctx *gin.Context, passportSeries int, passportNumber int) (*entities.People, error)

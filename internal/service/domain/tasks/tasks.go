@@ -50,6 +50,7 @@ func (t *TaskService) StartTask(ctx *gin.Context) (*entities.Task, error) {
 
 	return dbTask, nil
 }
+
 func (t *TaskService) StopTask(ctx *gin.Context) (*entities.Task, error) {
 	passportSeries, _ := strconv.Atoi(ctx.Query("passportSeries"))
 	passportNumber, _ := strconv.Atoi(ctx.Query("passportNumber"))

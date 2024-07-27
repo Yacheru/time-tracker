@@ -8,7 +8,7 @@ var (
 	ErrPeopleNotFound    = errors.New("no people found")
 	FailedValidateParams = errors.New("failed validate params")
 	ErrPeopleExist       = errors.New("people already exist")
-	ErrCheckExist        = errors.New("people exist check failed")
+	DataTaken            = errors.New("passport_series or passport_number already taken")
 	InvalidSurname       = errors.New("invalid surname or does not exist")
 	InvalidName          = errors.New("invalid name or does not exist")
 	InvalidSeries        = errors.New("invalid passport series or does not exist")

@@ -37,6 +37,8 @@ func MapErrorsToResponse(err error) (int, string) {
 		return http.StatusBadRequest, constants.InvalidSurname.Error()
 	case errors.Is(err, constants.InvalidName):
 		return http.StatusBadRequest, constants.InvalidName.Error()
+	case errors.Is(err, constants.DataTaken):
+		return http.StatusConflict, constants.DataTaken.Error()
 	default:
 		return http.StatusInternalServerError, "Internal server error"
 	}
