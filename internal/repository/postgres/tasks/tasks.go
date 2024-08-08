@@ -38,7 +38,9 @@ func (t *TaskRepository) DeleteTask(ctx *gin.Context, id int) (*entities.Task, e
 	}
 
 	delQuery := `
-		DELETE FROM tasks WHERE people_id = $1 RETURNING *
+		DELETE FROM tasks 
+		WHERE people_id = $1 
+		RETURNING id, people_id, start_task, end_task, labor
 	`
 	err = tx.GetContext(ctx.Request.Context(), dbTask, delQuery, id)
 	if err != nil {
@@ -75,7 +77,7 @@ func (t *TaskRepository) StartTask(ctx *gin.Context, id int) (*entities.Task, er
 	}
 
 	taskQuery := `
-		INSERT INTO tasks (people_id) VALUES ($1) RETURNING *;
+		INSERT INTO tasks (people_id) VALUES ($1) RETURNING id, people_id, start_task, end_task, labor;
 	`
 	err = tx.GetContext(ctx.Request.Context(), dbTask, taskQuery, id)
 	if err != nil {
@@ -109,7 +111,10 @@ func (t *TaskRepository) StopTask(ctx *gin.Context, id int) (*entities.Task, err
 	}
 
 	taskQuery := `
-		UPDATE tasks SET end_task = $1, labor = $2 - start_task WHERE people_id = $3 AND end_task IS NULL RETURNING *;
+		UPDATE tasks 
+		SET end_task = $1, labor = $2 - start_task 
+		WHERE people_id = $3 AND end_task IS NULL 
+		RETURNING id, people_id, start_task, end_task, labor;
 	`
 	err = tx.GetContext(ctx.Request.Context(), dbTask, taskQuery, now, now, id)
 	if err != nil {
@@ -134,7 +139,7 @@ func (t *TaskRepository) GetAllTasks(ctx *gin.Context, id, limit int) (*[]entiti
 	var dbTasks = new([]entities.Task)
 
 	query := `
-		SELECT * FROM tasks WHERE people_id = $1 ORDER BY labor DESC LIMIT $2
+		SELECT id, people_id, start_task, end_task, labor FROM tasks WHERE people_id = $1 ORDER BY labor DESC LIMIT $2
 	`
 
 	err := t.db.SelectContext(ctx.Request.Context(), dbTasks, query, id, limit)

@@ -38,7 +38,9 @@ func (p *PeopleRepository) DeletePeople(ctx *gin.Context, passportSeries, passpo
 	var dbPeople = new(entities.People)
 
 	query := `
-		DELETE FROM peoples WHERE passport_series=$1 AND passport_number=$2 RETURNING *
+		DELETE FROM peoples
+		WHERE passport_series=$1 OR passport_number=$2
+		RETURNING id, surname, name, patronymic, passport_series, passport_number, task_id 
 	`
 
 	err := p.db.GetContext(ctx.Request.Context(), dbPeople, query, passportSeries, passportNumber)
@@ -53,7 +55,7 @@ func (p *PeopleRepository) GetAllPeoples(ctx *gin.Context, limit int) (*[]entiti
 	var dbPeoples = new([]entities.People)
 
 	query := `
-		SELECT * FROM peoples LIMIT $1
+		SELECT id, surname, name, patronymic, passport_series, passport_number, task_id FROM peoples LIMIT $1
 	`
 
 	err := p.db.SelectContext(ctx.Request.Context(), dbPeoples, query, limit)
@@ -68,7 +70,9 @@ func (p *PeopleRepository) GetPeople(ctx *gin.Context, passportSeries, passportN
 	var dbPeople = new(entities.People)
 
 	query := `
-		SELECT * FROM peoples WHERE passport_series = $1 AND passport_number = $2
+		SELECT id, surname, name, patronymic, passport_series, passport_number, task_id 
+		FROM peoples 
+		WHERE passport_series = $1 AND passport_number = $2
 	`
 
 	err := p.db.GetContext(ctx.Request.Context(), dbPeople, query, passportSeries, passportNumber)
@@ -83,7 +87,9 @@ func (p *PeopleRepository) CreatePeople(ctx *gin.Context, people *entities.Peopl
 	var dbPeople = new(entities.People)
 
 	query := `
-		INSERT INTO peoples (surname, name, patronymic, passport_series, passport_number) VALUES ($1, $2, $3, $4, $5) RETURNING *;
+		INSERT INTO peoples (surname, name, patronymic, passport_series, passport_number) 
+		VALUES ($1, $2, $3, $4, $5) 
+		RETURNING id, surname, name, patronymic, passport_series, passport_number, task_id;
 	`
 	err := p.db.GetContext(ctx.Request.Context(), dbPeople, query, people.Surname, people.Name, people.Patronymic, people.PassportSeries, people.PassportNumber)
 	if err != nil {
@@ -97,7 +103,10 @@ func (p *PeopleRepository) UpdatePeople(ctx *gin.Context, people *entities.Peopl
 	var dbPeople = new(entities.People)
 
 	query := `
-		UPDATE peoples SET surname=$1, name=$2, patronymic=$3, passport_series=$4, passport_number=$5 WHERE id=$6 RETURNING *;
+		UPDATE peoples 
+		SET surname=$1, name=$2, patronymic=$3, passport_series=$4, passport_number=$5 
+		WHERE id=$6 
+		RETURNING id, surname, name, patronymic, passport_series, passport_number, task_id ;
 	`
 	err := p.db.GetContext(ctx.Request.Context(), dbPeople, query,
 		people.Surname, people.Name, people.Patronymic, people.PassportSeries, people.PassportNumber, id,

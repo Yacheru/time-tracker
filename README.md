@@ -1,8 +1,12 @@
-### Тестовое задание для Effective Mobile
+### Time-Tracker
+
+Сервис позволяет создавать задачи который пользователь может начать, 
+а после заканчивать рассчитывая затраченное на выполнение время. Поддерживает получение/создание/изменение/удаление пользователей.
+Получение/Старт/Конец задачи.
+
+swagger доступен по localhost:port/api/swagger
 
 Запуск локально...
 1. docker-compose -f ./deploy/docker-compose.yml --env-file ./configs/.env up -d --remove-orphans --build
 
 2. Ожидаем запуска...
-
-3. goose -dir schema postgres 'postgresql://EffectiveMobile:somestrongpassword@localhost:5432/db_peoples' up

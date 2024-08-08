@@ -19,10 +19,13 @@ CREATE TABLE IF NOT EXISTS tasks (
     foreign key (people_id) references peoples(id) on delete cascade
 );
 
+CREATE INDEX IF NOT EXISTS peoples_id ON peoples(id);
+
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE IF EXISTS peoples;
 DROP TABLE IF EXISTS tasks;
+DROP INDEX IF EXISTS peoples_id
 -- +goose StatementEnd

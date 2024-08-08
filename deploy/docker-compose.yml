@@ -1,17 +1,17 @@
 services:
-  time-tracker:
-    user: root
-    container_name: time-tracker
-    ports:
-      - ${API_PORT}:${API_PORT}
-    build:
-      context: ../
-      dockerfile: ./deploy/Dockerfile
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - time-tracker
+#  time-tracker:
+#    user: root
+#    container_name: time-tracker
+#    ports:
+#      - ${API_PORT}:${API_PORT}
+#    build:
+#      context: ../
+#      dockerfile: ./deploy/Dockerfile
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    networks:
+#      - time-tracker
 
   postgres:
     user: root
